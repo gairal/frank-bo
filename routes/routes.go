@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"cloud.google.com/go/datastore"
-	"github.com/gairal/frank-gairal-bo/models"
 )
 
 // RouteStruct - route structure
@@ -20,14 +19,11 @@ type RouteStructs []RouteStruct
 
 // Route - Route object
 type Route struct {
-	DbClient *datastore.Client
+	db *datastore.Client
 }
 
 // GetRoutes - List all routes
-func GetRoutes() RouteStructs {
-	dbClient := models.InitDbClient()
-	r := &Route{DbClient: dbClient}
-
+func (r *Route) getRoutes() RouteStructs {
 	works := &WorksRoute{r}
 	educations := &EducationsRoute{r}
 

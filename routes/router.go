@@ -4,19 +4,20 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gairal/frank-gairal-bo/models"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
 // RegisterHandlers - instanciate the router
 func RegisterHandlers() {
+	r := &Route{db: models.InitDbClient()}
+
 	router := mux.NewRouter().StrictSlash(true)
-	for _, route := range GetRoutes() {
+	for _, route := range r.getRoutes() {
 		var handler http.Handler
 
 		handler = route.HandlerFunc
-		// handler = tools.Logger(handler, route.Name)
-		// handler = BindDb(route.HandlerFunc, db)
 
 		router.
 			Methods(route.Method).
@@ -27,10 +28,3 @@ func RegisterHandlers() {
 
 	http.Handle("/", handlers.CombinedLoggingHandler(os.Stderr, router))
 }
-
-// BindDb - bind DB client to the handler
-// func BindDb(inner http.Handler, db *datastore.Client) http.Handler {
-// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-// 		inner.ServeHTTP(w, r, db)
-// 	})
-// }
