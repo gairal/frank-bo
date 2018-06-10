@@ -2,16 +2,17 @@ package routes
 
 import (
 	"net/http"
+
+	"github.com/gairal/frank-gairal-bo/models"
 )
 
 // EducationsRoute Struct
 type EducationsRoute struct{ *Route }
 
-// index - Get all works
+// index - Get all Educations
 func (route *EducationsRoute) index(w http.ResponseWriter, r *http.Request) {
-	// w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	edu := &models.Education{Entity: route.e}
+	edus := edu.GetAll()
 
-	// e := &models.Entity{DbClient: route.db}
-	// // edus := e.GetAll(models.Education, "education")
-	// // json.NewEncoder(w).Encode(edus)
+	route.serveGetAll(w, &edus)
 }

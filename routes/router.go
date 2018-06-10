@@ -11,13 +11,11 @@ import (
 
 // RegisterHandlers - instanciate the router
 func RegisterHandlers() {
-	r := &Route{db: models.InitDbClient()}
+	r := &Route{e: models.InitDbClient()}
 
 	router := mux.NewRouter().StrictSlash(true)
 	for _, route := range r.getRoutes() {
-		var handler http.Handler
-
-		handler = route.HandlerFunc
+		handler := route.HandlerFunc
 
 		router.
 			Methods(route.Method).

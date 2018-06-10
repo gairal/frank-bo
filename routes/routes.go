@@ -1,9 +1,10 @@
 package routes
 
 import (
+	"encoding/json"
 	"net/http"
 
-	"cloud.google.com/go/datastore"
+	"github.com/gairal/frank-gairal-bo/models"
 )
 
 // RouteStruct - route structure
@@ -19,7 +20,7 @@ type RouteStructs []RouteStruct
 
 // Route - Route object
 type Route struct {
-	db *datastore.Client
+	e *models.Entity
 }
 
 // GetRoutes - List all routes
@@ -41,4 +42,10 @@ func (r *Route) getRoutes() RouteStructs {
 			educations.index,
 		},
 	}
+}
+
+// serveGetAll - Send JSON content
+func (r *Route) serveGetAll(w http.ResponseWriter, entities *interface{}) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	json.NewEncoder(w).Encode(entities)
 }

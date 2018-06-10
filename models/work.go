@@ -8,7 +8,7 @@ import (
 
 // Work - Work Structure
 type Work struct {
-	*Entity
+	Entity          *Entity        `json:"-"`
 	Accomplishments string         `json:"accomplishments" datastore:"accomplishments"`
 	DateIn          time.Time      `json:"date_in" datastore:"date_in"`
 	DateOut         time.Time      `json:"date_out" datastore:"date_out"`
@@ -23,3 +23,11 @@ type Work struct {
 
 // Works - Array or Work
 type Works []Work
+
+// GetAll - Get All works
+func (w *Work) GetAll() interface{} {
+	q := datastore.NewQuery("work")
+	var entities Works
+	w.Entity.getAll(q, &entities)
+	return entities
+}
