@@ -27,6 +27,6 @@ type Educations []Education
 func (e *Education) GetAll() interface{} {
 	q := datastore.NewQuery("education")
 	var entities Educations
-	e.Entity.getAll(q, &entities)
+	e.Entity.getAll(q, &entities, "year_in", true)
 	return entities
 }

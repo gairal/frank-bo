@@ -29,8 +29,17 @@ func InitDbClient() *Entity {
 }
 
 // GetAll - Return all of type entities
-func (e *Entity) getAll(q *datastore.Query, entities interface{}) {
+func (e *Entity) getAll(q *datastore.Query, entities interface{}, orderCol string, descending bool) {
 	ctx := context.Background()
+
+	if orderCol != "" {
+		var order = ""
+		if descending {
+			order = "-"
+		}
+
+		q = q.Order(order + orderCol)
+	}
 
 	if _, err := e.DbClient.GetAll(ctx, q, entities); err != nil {
 		log.Fatalf("Failed to get entities: %v", err)

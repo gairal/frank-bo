@@ -28,6 +28,6 @@ type Works []Work
 func (w *Work) GetAll() interface{} {
 	q := datastore.NewQuery("work")
 	var entities Works
-	w.Entity.getAll(q, &entities)
+	w.Entity.getAll(q, &entities, "date_in", true)
 	return entities
 }
