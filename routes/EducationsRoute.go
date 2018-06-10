@@ -7,14 +7,14 @@ import (
 	"github.com/gairal/frank-gairal-bo/models"
 )
 
-// WorksRoute Struct
-type WorksRoute struct{ *Route }
+// EducationsRoute Struct
+type EducationsRoute struct{ *Route }
 
 // index - Get all works
-func (route *WorksRoute) index(w http.ResponseWriter, r *http.Request) {
+func (route *EducationsRoute) index(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	e := &models.Entity{DbClient: route.DbClient}
-	works := e.GetAll("work")
-	json.NewEncoder(w).Encode(works)
+	edus := e.GetAll("education")
+	json.NewEncoder(w).Encode(edus)
 }

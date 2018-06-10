@@ -3,31 +3,46 @@ package routes
 import (
 	"net/http"
 
+	"cloud.google.com/go/datastore"
 	"github.com/gairal/frank-gairal-bo/models"
 )
 
-// Route - route structure
-type Route struct {
+// RouteStruct - route structure
+type RouteStruct struct {
 	Name        string
 	Method      string
 	Pattern     string
 	HandlerFunc http.HandlerFunc
 }
 
-// Routes - all routes
-type Routes []Route
+// RouteStructs - all routes
+type RouteStructs []RouteStruct
+
+// Route - Route object
+type Route struct {
+	DbClient *datastore.Client
+}
 
 // GetRoutes - List all routes
-func GetRoutes() Routes {
-	db := models.InitDbClient()
-	works := &WorksRoute{db: db}
+func GetRoutes() RouteStructs {
+	dbClient := models.InitDbClient()
+	r := &Route{DbClient: dbClient}
 
-	return Routes{
-		Route{
-			"WorksIndex",
+	works := &WorksRoute{r}
+	educations := &EducationsRoute{r}
+
+	return RouteStructs{
+		RouteStruct{
+			"worksIndex",
 			"GET",
 			"/works",
-			works.worksIndex,
+			works.index,
+		},
+		RouteStruct{
+			"educationsIndex",
+			"GET",
+			"/educations",
+			educations.index,
 		},
 	}
 }
