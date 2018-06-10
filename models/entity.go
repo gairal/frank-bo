@@ -3,6 +3,7 @@ package models
 import (
 	"context"
 	"log"
+	"reflect"
 
 	"cloud.google.com/go/datastore"
 )
@@ -27,15 +28,29 @@ func InitDbClient() *datastore.Client {
 }
 
 // GetAll - Get All entities
-func (e *Entity) GetAll(kind string) Works {
+// func (e *Entity) GetAll(kind string) Works {
+// 	ctx := context.Background()
+
+// 	q := datastore.NewQuery(kind)
+// 	var entities Works
+// 	if _, err := e.DbClient.GetAll(ctx, q, &entities); err != nil {
+// 		log.Fatalf("Failed to get works: %v", err)
+// 		panic(err)
+// 	}
+
+// 	return entities
+// }
+
+// GetAll - Get All entities
+func (e *Entity) GetAll(t reflect.Type, kind string) interface{} {
 	ctx := context.Background()
 
 	q := datastore.NewQuery(kind)
-	var works Works
-	if _, err := e.DbClient.GetAll(ctx, q, &works); err != nil {
-		log.Fatalf("Failed to get works: %v", err)
+	var entities Works
+	if _, err := e.DbClient.GetAll(ctx, q, &entities); err != nil {
+		log.Fatalf("Failed to get entities: %v", err)
 		panic(err)
 	}
 
-	return works
+	return entities
 }
