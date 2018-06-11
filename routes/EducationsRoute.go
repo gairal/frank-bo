@@ -11,8 +11,14 @@ type EducationsRoute struct{ *Route }
 
 // index - Get all Educations
 func (route *EducationsRoute) index(w http.ResponseWriter, r *http.Request) {
-	edu := &models.Education{Entity: route.e}
-	edus := edu.GetAll()
+	e := &models.Education{Entity: route.e}
+	es := e.GetAll()
+	route.serveGetAll(w, &es)
+}
 
-	route.serveGetAll(w, &edus)
+// byKey - Get one entity by its key
+func (route *EducationsRoute) byKey(w http.ResponseWriter, r *http.Request) {
+	e := models.Education{Entity: route.e}
+	e.Get(route.getKey(r))
+	route.serveGetAll(w, e)
 }

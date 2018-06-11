@@ -14,7 +14,8 @@ type Education struct {
 	YearOut          time.Time      `json:"year_out" datastore:"year_out"`
 	Diploma          string         `json:"diploma" datastore:"diploma"`
 	Place            string         `json:"place" datastore:"place"`
-	Image            *datastore.Key `json:"image" datastore:"image"`
+	ImageKey         *datastore.Key `json:"-" datastore:"image"`
+	Image            Image          `json:"image"`
 	Name             string         `json:"name" datastore:"name"`
 	Website          string         `json:"website" datastore:"website"`
 	Extra            string         `json:"extra" datastore:"extra"`
@@ -24,9 +25,22 @@ type Education struct {
 type Educations []Education
 
 // GetAll - Get All Educations
-func (e *Education) GetAll() interface{} {
+func (e *Education) GetAll() Educations {
 	q := datastore.NewQuery("education")
 	var entities Educations
 	e.Entity.getAll(q, &entities, "year_in", true)
+
+	img := &Image{Entity: e.Entity}
+	imgs := img.getAllOrdered()
+
+	for i := 0; i < len(entities); i++ {
+		entities[i].Image = imgs[entities[i].ImageKey.ID]
+	}
+
 	return entities
+}
+
+// Get - Get Education by id
+func (e *Education) Get(k int64) {
+	e.Entity.get("education", k, e)
 }
