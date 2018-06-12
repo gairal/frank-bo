@@ -28,6 +28,6 @@ func (e *Travel) GetAll(ctx context.Context) Travels {
 }
 
 // Get - Get Travel by id
-func (e *Travel) Get(k int64) {
-	e.Entity.get("travel", k, e)
+func (e *Travel) Get(ctx context.Context, k int64) {
+	e.Entity.get(ctx, "travel", k, e)
 }

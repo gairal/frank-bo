@@ -49,9 +49,7 @@ func (e *Entity) getAll(ctx context.Context, q *datastore.Query, entities interf
 }
 
 // Get - Return an entity by its key
-func (e *Entity) get(kind string, k int64, entity interface{}) {
-	ctx := context.Background()
-
+func (e *Entity) get(ctx context.Context, kind string, k int64, entity interface{}) {
 	key := datastore.NewKey(ctx, kind, "", k, nil)
 	// key := datastore.IDKey(kind, k, nil)
 
