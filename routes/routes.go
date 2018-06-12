@@ -27,73 +27,73 @@ type Route struct {
 
 // GetRoutes - List all routes
 func (r *Route) getRoutes() RouteStructs {
-	works := &WorksRoute{r}
-	educations := &EducationsRoute{r}
-	skills := &SkillsRoute{r}
-	interests := &InterestsRoute{r}
+	// works := &WorksRoute{r}
+	// educations := &EducationsRoute{r}
+	// skills := &SkillsRoute{r}
+	// interests := &InterestsRoute{r}
 	travels := &TravelsRoute{r}
 
 	return RouteStructs{
-		RouteStruct{
-			"worksIndex",
-			"GET",
-			"/works",
-			works.index,
-		},
-		RouteStruct{
-			"worksByKey",
-			"GET",
-			"/works/{key}",
-			works.byKey,
-		},
-		RouteStruct{
-			"educationsIndex",
-			"GET",
-			"/educations",
-			educations.index,
-		},
-		RouteStruct{
-			"educationsByKey",
-			"GET",
-			"/educations/{key}",
-			educations.byKey,
-		},
-		RouteStruct{
-			"skillsIndex",
-			"GET",
-			"/skills",
-			skills.index,
-		},
-		RouteStruct{
-			"skillsByCategory",
-			"GET",
-			"/skills/categories",
-			skills.byCategory,
-		},
-		RouteStruct{
-			"skillsByKey",
-			"GET",
-			"/skills/{key}",
-			skills.byKey,
-		},
-		RouteStruct{
-			"interestsIndex",
-			"GET",
-			"/interests",
-			interests.index,
-		},
-		RouteStruct{
-			"interestsByCategory",
-			"GET",
-			"/interests/categories",
-			interests.byCategory,
-		},
-		RouteStruct{
-			"interestsByKey",
-			"GET",
-			"/interests/{key}",
-			interests.byKey,
-		},
+		// RouteStruct{
+		// 	"worksIndex",
+		// 	"GET",
+		// 	"/works",
+		// 	works.index,
+		// },
+		// RouteStruct{
+		// 	"worksByKey",
+		// 	"GET",
+		// 	"/works/{key}",
+		// 	works.byKey,
+		// },
+		// RouteStruct{
+		// 	"educationsIndex",
+		// 	"GET",
+		// 	"/educations",
+		// 	educations.index,
+		// },
+		// RouteStruct{
+		// 	"educationsByKey",
+		// 	"GET",
+		// 	"/educations/{key}",
+		// 	educations.byKey,
+		// },
+		// RouteStruct{
+		// 	"skillsIndex",
+		// 	"GET",
+		// 	"/skills",
+		// 	skills.index,
+		// },
+		// RouteStruct{
+		// 	"skillsByCategory",
+		// 	"GET",
+		// 	"/skills/categories",
+		// 	skills.byCategory,
+		// },
+		// RouteStruct{
+		// 	"skillsByKey",
+		// 	"GET",
+		// 	"/skills/{key}",
+		// 	skills.byKey,
+		// },
+		// RouteStruct{
+		// 	"interestsIndex",
+		// 	"GET",
+		// 	"/interests",
+		// 	interests.index,
+		// },
+		// RouteStruct{
+		// 	"interestsByCategory",
+		// 	"GET",
+		// 	"/interests/categories",
+		// 	interests.byCategory,
+		// },
+		// RouteStruct{
+		// 	"interestsByKey",
+		// 	"GET",
+		// 	"/interests/{key}",
+		// 	interests.byKey,
+		// },
 		RouteStruct{
 			"travelsIndex",
 			"GET",
@@ -105,6 +105,12 @@ func (r *Route) getRoutes() RouteStructs {
 			"GET",
 			"/travels/{key}",
 			travels.byKey,
+		},
+		RouteStruct{
+			"travelsAdd",
+			"POST",
+			"/travels",
+			travels.add,
 		},
 	}
 }

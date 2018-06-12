@@ -13,7 +13,7 @@
       "remotePath": "",
       "port": 2345,
       "host": "127.0.0.1",
-      "program": "${workspaceFolder}/appengine",
+      "program": "${workspaceFolder}",
       "env": {},
       "args": [],
       "showLog": true,

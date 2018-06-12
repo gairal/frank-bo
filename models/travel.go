@@ -1,31 +1,28 @@
 package models
 
 import (
-	"cloud.google.com/go/datastore"
-)
+	"context"
 
-// Coordinates - Coordinates Structure
-type Coordinates struct {
-	Latitude  float32 `json:"latitude" datastore:"latitude"`
-	Longitude float32 `json:"longitude" datastore:"longitude"`
-}
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/datastore"
+)
 
 // Travel - Travel Structure
 type Travel struct {
-	Entity      *Entity      `json:"-"`
-	Coordinates *Coordinates `json:"Coordinates" datastore:"coordinates"`
-	Order       int          `json:"order" datastore:"order"`
-	Place       string       `json:"place" datastore:"place"`
+	Entity      *Entity            `json:"-" datastore:"-"`
+	Coordinates appengine.GeoPoint `json:"coordinates" datastore:"coordinates"`
+	Order       int                `json:"order" datastore:"order"`
+	Place       string             `json:"place" datastore:"place"`
 }
 
 // Travels - Array of Travel
 type Travels []Travel
 
 // GetAll - Get All Travels
-func (e *Travel) GetAll() Travels {
+func (e *Travel) GetAll(ctx context.Context) Travels {
 	q := datastore.NewQuery("travel")
 	var entities Travels
-	e.Entity.getAll(q, &entities, "order", false)
+	e.Entity.getAll(ctx, q, &entities, "", false)
 
 	return entities
 }

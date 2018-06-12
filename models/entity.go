@@ -3,34 +3,35 @@ package models
 import (
 	"context"
 	"log"
-	// "google.golang.org/appengine/datastore"
-	"cloud.google.com/go/datastore"
+
+	"google.golang.org/appengine/datastore"
+	// "cloud.google.com/go/datastore"
 )
 
 // Entity - abstract entity
 type Entity struct {
-	DbClient *datastore.Client
+	// DbClient *datastore.Client
 }
 
 // InitDbClient - Init Data Store Client
-func InitDbClient() *Entity {
-	ctx := context.Background()
-	projectID := "com-gairal-frank-api"
+// func InitDbClient() *Entity {
+// 	ctx := context.Background()
+// 	projectID := "com-gairal-frank-api"
 
-	client, err := datastore.NewClient(ctx, projectID)
-	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
-		panic(err)
-	}
+// 	client, err := datastore.NewClient(ctx, projectID)
+// 	if err != nil {
+// 		log.Fatalf("Failed to create client: %v", err)
+// 		panic(err)
+// 	}
 
-	e := &Entity{DbClient: client}
+// 	e := &Entity{DbClient: client}
 
-	return e
-}
+// 	return e
+// }
 
 // GetAll - Return all of type entities
-func (e *Entity) getAll(q *datastore.Query, entities interface{}, orderCol string, descending bool) {
-	ctx := context.Background()
+func (e *Entity) getAll(ctx context.Context, q *datastore.Query, entities interface{}, orderCol string, descending bool) {
+	// ctx := context.Background()
 
 	if orderCol != "" {
 		var order = ""
@@ -41,7 +42,7 @@ func (e *Entity) getAll(q *datastore.Query, entities interface{}, orderCol strin
 		q = q.Order(order + orderCol)
 	}
 
-	if _, err := e.DbClient.GetAll(ctx, q, entities); err != nil {
+	if _, err := q.GetAll(ctx, entities); err != nil {
 		log.Fatalf("Failed to get entities: %v", err)
 		panic(err)
 	}
@@ -51,9 +52,10 @@ func (e *Entity) getAll(q *datastore.Query, entities interface{}, orderCol strin
 func (e *Entity) get(kind string, k int64, entity interface{}) {
 	ctx := context.Background()
 
-	key := datastore.IDKey(kind, k, nil)
+	key := datastore.NewKey(ctx, kind, "", k, nil)
+	// key := datastore.IDKey(kind, k, nil)
 
-	if err := e.DbClient.Get(ctx, key, entity); err != nil {
+	if err := datastore.Get(ctx, key, entity); err != nil {
 		log.Fatalf("Failed to get entity: %v", err)
 		panic(err)
 	}
