@@ -9,7 +9,6 @@ import (
 
 // Travel - Travel Structure
 type Travel struct {
-	Entity      *Entity            `json:"-" datastore:"-"`
 	Coordinates appengine.GeoPoint `json:"coordinates" datastore:"coordinates"`
 	Order       int                `json:"order" datastore:"order"`
 	Place       string             `json:"place" datastore:"place"`
@@ -19,15 +18,28 @@ type Travel struct {
 type Travels []Travel
 
 // GetAll - Get All Travels
-func (e *Travel) GetAll(ctx context.Context) Travels {
+func (e *Travel) GetAll(ctx context.Context) []IEntity {
 	q := datastore.NewQuery("travel")
 	var entities Travels
-	e.Entity.getAll(ctx, q, &entities, "", false)
+	GetAll(ctx, q, &entities, "order", false)
 
-	return entities
+	res := make([]IEntity, len(entities))
+	for i, v := range entities {
+		res[i] = IEntity(&v)
+	}
+
+	return res
 }
+
+// func (e *Travel) GetAll(ctx context.Context) Travels {
+// 	q := datastore.NewQuery("travel")
+// 	var entities Travels
+// 	GetAll(ctx, q, &entities, "", false)
+
+// 	return entities
+// }
 
 // Get - Get Travel by id
 func (e *Travel) Get(ctx context.Context, k int64) {
-	e.Entity.get(ctx, "travel", k, e)
+	Get(ctx, "travel", k, e)
 }

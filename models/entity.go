@@ -5,32 +5,19 @@ import (
 	"log"
 
 	"google.golang.org/appengine/datastore"
-	// "cloud.google.com/go/datastore"
 )
 
-// Entity - abstract entity
-type Entity struct {
-	// DbClient *datastore.Client
+// IEntity - entity interface
+type IEntity interface {
+	GetAll(context.Context) []IEntity
+	Get(context.Context, int64)
 }
 
-// InitDbClient - Init Data Store Client
-// func InitDbClient() *Entity {
-// 	ctx := context.Background()
-// 	projectID := "com-gairal-frank-api"
-
-// 	client, err := datastore.NewClient(ctx, projectID)
-// 	if err != nil {
-// 		log.Fatalf("Failed to create client: %v", err)
-// 		panic(err)
-// 	}
-
-// 	e := &Entity{DbClient: client}
-
-// 	return e
-// }
+// Keys - array of datastore keys
+type Keys []*datastore.Key
 
 // GetAll - Return all of type entities
-func (e *Entity) getAll(ctx context.Context, q *datastore.Query, entities interface{}, orderCol string, descending bool) {
+func GetAll(ctx context.Context, q *datastore.Query, entities interface{}, orderCol string, descending bool) {
 	// ctx := context.Background()
 
 	if orderCol != "" {
@@ -49,12 +36,32 @@ func (e *Entity) getAll(ctx context.Context, q *datastore.Query, entities interf
 }
 
 // Get - Return an entity by its key
-func (e *Entity) get(ctx context.Context, kind string, k int64, entity interface{}) {
+func Get(ctx context.Context, kind string, k int64, entity interface{}) {
 	key := datastore.NewKey(ctx, kind, "", k, nil)
-	// key := datastore.IDKey(kind, k, nil)
 
 	if err := datastore.Get(ctx, key, entity); err != nil {
 		log.Fatalf("Failed to get entity: %v", err)
 		panic(err)
 	}
+}
+
+// GetMulti - Return multiple entiies based on their key
+func GetMulti(ctx context.Context, keys []*datastore.Key, entities interface{}) {
+	if err := datastore.GetMulti(ctx, keys, entities); err != nil {
+		log.Fatalf("Failed to get multi entities: %v", err)
+		panic(err)
+	}
+}
+
+// GetOrderedImgs - Get Images in a map for an []IEntity
+func GetOrderedImgs(ctx context.Context, keys map[int64]*datastore.Key) OrderedImages {
+	imgsSlice := make(Keys, len(keys))
+	idx := 0
+	for _, v := range keys {
+		imgsSlice[idx] = v
+		idx++
+	}
+
+	img := &Image{}
+	return img.getMultiOrdered(ctx, imgsSlice)
 }
