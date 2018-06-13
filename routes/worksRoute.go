@@ -4,19 +4,19 @@ package routes
 type WorksRoute struct{ *Route }
 
 // index - Get all works
-func (route *WorksRoute) getRoutes() RouteStructs {
+func (r *WorksRoute) getRoutes() RouteStructs {
 	return RouteStructs{
 		RouteStruct{
 			"worksIndex",
 			"GET",
 			"/works",
-			route.index,
+			r.index,
 		},
 		RouteStruct{
 			"worksByKey",
 			"GET",
 			"/works/{key}",
-			route.byKey,
+			r.byKey,
 		},
 	}
 }

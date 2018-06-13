@@ -32,13 +32,13 @@ type Route struct {
 }
 
 // index - Get all entities
-func (route *Route) index(w http.ResponseWriter, r *http.Request) {
-	es := route.entity.GetAll(appengine.NewContext(r))
-	route.router.serve(w, &es)
+func (r *Route) index(w http.ResponseWriter, req *http.Request) {
+	es := r.entity.GetAll(appengine.NewContext(req))
+	r.router.serve(w, &es)
 }
 
 // byKey - Get one entity by its key
-func (route *Route) byKey(w http.ResponseWriter, r *http.Request) {
-	route.entity.Get(appengine.NewContext(r), route.router.getKey(r))
-	route.router.serve(w, route.entity)
+func (r *Route) byKey(w http.ResponseWriter, req *http.Request) {
+	r.entity.Get(appengine.NewContext(req), r.router.getKey(req))
+	r.router.serve(w, r.entity)
 }

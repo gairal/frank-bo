@@ -4,19 +4,19 @@ package routes
 type TravelsRoute struct{ *Route }
 
 // index - Get all works
-func (route *TravelsRoute) getRoutes() RouteStructs {
+func (r *TravelsRoute) getRoutes() RouteStructs {
 	return RouteStructs{
 		RouteStruct{
 			"travelsIndex",
 			"GET",
 			"/travels",
-			route.index,
+			r.index,
 		},
 		RouteStruct{
 			"travelsByKey",
 			"GET",
 			"/travels/{key}",
-			route.byKey,
+			r.byKey,
 		},
 	}
 }

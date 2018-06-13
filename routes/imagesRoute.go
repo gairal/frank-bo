@@ -4,19 +4,19 @@ package routes
 type ImagesRoute struct{ *Route }
 
 // index - Get all works
-func (route *ImagesRoute) getRoutes() RouteStructs {
+func (r *ImagesRoute) getRoutes() RouteStructs {
 	return RouteStructs{
 		RouteStruct{
 			"imagesIndex",
 			"GET",
 			"/images",
-			route.index,
+			r.index,
 		},
 		RouteStruct{
 			"imagesByKey",
 			"GET",
 			"/images/{key}",
-			route.byKey,
+			r.byKey,
 		},
 	}
 }

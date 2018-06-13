@@ -4,19 +4,19 @@ package routes
 type EducationsRoute struct{ *Route }
 
 // index - Get all works
-func (route *EducationsRoute) getRoutes() RouteStructs {
+func (r *EducationsRoute) getRoutes() RouteStructs {
 	return RouteStructs{
 		RouteStruct{
 			"educationsIndex",
 			"GET",
 			"/educations",
-			route.index,
+			r.index,
 		},
 		RouteStruct{
 			"educationsByKey",
 			"GET",
 			"/educations/{key}",
-			route.byKey,
+			r.byKey,
 		},
 	}
 }
