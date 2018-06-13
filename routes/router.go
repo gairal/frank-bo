@@ -25,26 +25,35 @@ func (r *Router) addRoute(routes RouteStructs) {
 // getRoutes - Add new route
 func (r *Router) getRoutes() {
 	var entity models.IEntity
+	var route IRoute
 
 	entity = &models.Travel{}
-	travels := &TravelsRoute{&Route{r, entity}}
-	r.addRoute(travels.getRoutes())
+	route = &TravelsRoute{&Route{r, entity}}
+	r.addRoute(route.getRoutes())
 
 	entity = &models.Image{}
-	images := &ImagesRoute{&Route{r, entity}}
-	r.addRoute(images.getRoutes())
+	route = &ImagesRoute{&Route{r, entity}}
+	r.addRoute(route.getRoutes())
 
 	entity = &models.Category{}
-	categories := &CategoriesRoute{&Route{r, entity}}
-	r.addRoute(categories.getRoutes())
+	route = &CategoriesRoute{&Route{r, entity}}
+	r.addRoute(route.getRoutes())
 
 	entity = &models.Education{}
-	edus := &EducationsRoute{&Route{r, entity}}
-	r.addRoute(edus.getRoutes())
+	route = &EducationsRoute{&Route{r, entity}}
+	r.addRoute(route.getRoutes())
 
 	entity = &models.Work{}
-	works := &WorksRoute{&Route{r, entity}}
-	r.addRoute(works.getRoutes())
+	route = &WorksRoute{&Route{r, entity}}
+	r.addRoute(route.getRoutes())
+
+	entity = &models.Skill{}
+	route = &SkillsRoute{&Route{r, entity}}
+	r.addRoute(route.getRoutes())
+
+	entity = &models.Interest{}
+	route = &InterestsRoute{&Route{r, entity}}
+	r.addRoute(route.getRoutes())
 
 	// r.addRoute(RouteStructs{
 	// 	RouteStruct{

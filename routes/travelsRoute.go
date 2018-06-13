@@ -18,11 +18,5 @@ func (route *TravelsRoute) getRoutes() RouteStructs {
 			"/travels/{key}",
 			route.byKey,
 		},
-		// RouteStruct{
-		// 	"travelsAdd",
-		// 	"POST",
-		// 	"/travels",
-		// 	travels.add,
-		// },
 	}
 }

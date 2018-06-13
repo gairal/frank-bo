@@ -30,7 +30,7 @@ func (e *Education) GetAll(ctx context.Context) []IEntity {
 
 	// Get All educations
 	var entities Educations
-	GetAll(ctx, q, &entities, "", false)
+	GetAll(ctx, q, &entities, "year_in", true)
 
 	e.GetImages(ctx, entities)
 

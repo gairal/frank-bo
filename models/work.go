@@ -9,6 +9,7 @@ import (
 
 // Work - Work Structure
 type Work struct {
+	ID              int64          `json:"id" datastore:"ID"`
 	Accomplishments string         `json:"accomplishments" datastore:"accomplishments"`
 	DateIn          time.Time      `json:"date_in" datastore:"date_in"`
 	DateOut         time.Time      `json:"date_out" datastore:"date_out"`
@@ -31,7 +32,7 @@ func (e *Work) GetAll(ctx context.Context) []IEntity {
 
 	// Get All Works
 	var entities Works
-	GetAll(ctx, q, &entities, "", false)
+	GetAll(ctx, q, &entities, "date_in", true)
 
 	e.GetImages(ctx, entities)
 

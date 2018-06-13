@@ -23,21 +23,20 @@ func (e *Travel) GetAll(ctx context.Context) []IEntity {
 	var entities Travels
 	GetAll(ctx, q, &entities, "order", false)
 
-	res := make([]IEntity, len(entities))
-	for i, v := range entities {
-		res[i] = IEntity(&v)
+	return e.sliceToIEntitySlice(entities)
+}
+
+// sliceToIEntitySlice - Transforman education slice to IEntity slice
+func (e *Travel) sliceToIEntitySlice(es Travels) []IEntity {
+	res := make([]IEntity, len(es))
+
+	for i, v := range es {
+		ent := v
+		res[i] = IEntity(&ent)
 	}
 
 	return res
 }
-
-// func (e *Travel) GetAll(ctx context.Context) Travels {
-// 	q := datastore.NewQuery("travel")
-// 	var entities Travels
-// 	GetAll(ctx, q, &entities, "", false)
-
-// 	return entities
-// }
 
 // Get - Get Travel by id
 func (e *Travel) Get(ctx context.Context, k int64) {

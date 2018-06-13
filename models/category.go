@@ -22,7 +22,7 @@ type OrderedCategories map[int64]Category
 func (e *Category) GetAll(ctx context.Context) []IEntity {
 	q := datastore.NewQuery("image")
 	var entities Categories
-	GetAll(ctx, q, &entities, "", false)
+	GetAll(ctx, q, &entities, "order", false)
 
 	return e.sliceToIEntitySlice(entities)
 }

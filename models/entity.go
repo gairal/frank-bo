@@ -17,7 +17,7 @@ type IEntity interface {
 type Keys []*datastore.Key
 
 // GetAll - Return all of type entities
-func GetAll(ctx context.Context, q *datastore.Query, entities interface{}, orderCol string, descending bool) {
+func GetAll(ctx context.Context, q *datastore.Query, entities interface{}, orderCol string, descending bool) []*datastore.Key {
 	// ctx := context.Background()
 
 	if orderCol != "" {
@@ -29,10 +29,14 @@ func GetAll(ctx context.Context, q *datastore.Query, entities interface{}, order
 		q = q.Order(order + orderCol)
 	}
 
-	if _, err := q.GetAll(ctx, entities); err != nil {
+	keys, err := q.GetAll(ctx, entities)
+
+	if err != nil {
 		log.Fatalf("Failed to get entities: %v", err)
 		panic(err)
 	}
+
+	return keys
 }
 
 // Get - Return an entity by its key
