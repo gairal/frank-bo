@@ -18,29 +18,17 @@ type Interest struct {
 type Interests []Interest
 
 // GetAll - Get All Interests
-func (e *Interest) GetAll(ctx context.Context) []IEntity {
+func (e *Interest) GetAll(ctx context.Context) interface{} {
 	q := datastore.NewQuery("interest")
 	var entities Interests
 	GetAll(ctx, q, &entities, "order", false)
 
-	return e.sliceToIEntitySlice(entities)
+	return entities
 }
 
 // GetAllByCategory - Get All Skills by catgory
-func (e *Interest) GetAllByCategory(ctx context.Context) []IEntity {
+func (e *Interest) GetAllByCategory(ctx context.Context) interface{} {
 	return e.GetAll(ctx)
-}
-
-// sliceToIEntitySlice - Transforman education slice to IEntity slice
-func (e *Interest) sliceToIEntitySlice(es Interests) []IEntity {
-	res := make([]IEntity, len(es))
-
-	for i, v := range es {
-		ent := v
-		res[i] = IEntity(&ent)
-	}
-
-	return res
 }
 
 // Get - Get Interest by id

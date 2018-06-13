@@ -17,6 +17,15 @@ type Skill struct {
 // Skills - Array of Skill
 type Skills []Skill
 
+// SkillCategory - Category
+type SkillCategory struct {
+	Category
+	Skills Skills `json:"skills" datastore:"skills"`
+}
+
+// SkillCategories - Array of SkillCategory
+type SkillCategories []SkillCategory
+
 // GetAllSkills - Get All Skills
 func (e *Skill) GetAllSkills(ctx context.Context) Skills {
 	q := datastore.NewQuery("skill")
@@ -27,20 +36,8 @@ func (e *Skill) GetAllSkills(ctx context.Context) Skills {
 }
 
 // GetAll - Get All Skills
-func (e *Skill) GetAll(ctx context.Context) []IEntity {
-	return e.sliceToIEntitySlice(e.GetAllSkills(ctx))
-}
-
-// sliceToIEntitySlice - Transforman education slice to IEntity slice
-func (e *Skill) sliceToIEntitySlice(es Skills) []IEntity {
-	res := make([]IEntity, len(es))
-
-	for i, v := range es {
-		ent := v
-		res[i] = IEntity(&ent)
-	}
-
-	return res
+func (e *Skill) GetAll(ctx context.Context) interface{} {
+	return e.GetAllSkills(ctx)
 }
 
 // Get - Get Skill by id
@@ -49,39 +46,25 @@ func (e *Skill) Get(ctx context.Context, k int64) {
 }
 
 // GetAllByCategory - Get All Skills by catgory
-func (e *Skill) GetAllByCategory(ctx context.Context) []IEntity {
+func (e *Skill) GetAllByCategory(ctx context.Context) interface{} {
 	entities := e.GetAllSkills(ctx)
 
-	// entities := make(Skills, reflect.ValueOf(ent).Len())
-	// var entityCategories SkillCategories
+	cats := make(map[int64]*datastore.Key)
 
-	// cat := &Category{Entity: e.Entity}
-	// cats := make(Categories, reflect.ValueOf(cat.GetAll()).Len())
+	for _, v := range entities {
+		if _, ok := cats[v.CategoryKey.IntID()]; !ok {
+			cats[v.CategoryKey.IntID()] = v.CategoryKey
+		}
+	}
 
-	// entitiesMap := make(map[int64]Skills)
+	// log.Fatalf("Failed to get route")
 
-	// // Create skills grouped by categories
-	// for i := 0; i < len(entities); i++ {
-	// 	if _, ok := entitiesMap[entities[i].CategoryKey.ID]; !ok {
-	// 		var skills Skills
-	// 		entitiesMap[entities[i].CategoryKey.ID] = skills
-	// 	}
+	// Get all Categories
+	orderedCats := GetOrderedCats(ctx, cats)
+	cat := &Category{}
+	return cat.orderedEntitiesToSlice(orderedCats)
 
-	// 	entitiesMap[entities[i].CategoryKey.ID] = append(entitiesMap[entities[i].CategoryKey.ID], entities[i])
-	// }
-
-	// for i := 0; i < len(cats); i++ {
-	// 	if val, ok := entitiesMap[cats[i].Key.ID]; ok {
-	// 		entityCategories = append(entityCategories, SkillCategory{cats[i], val})
-	// 	}
-	// }
-
-	// var res []IEntity
-	// for i, v := range entities {
-	// 	res[i] = IEntity(&v)
-	// }
-
-	return e.sliceToIEntitySlice(entities)
+	// return e.sliceToIEntitySlice(entities)
 }
 
 // GetCategories - Get Categories in education slice

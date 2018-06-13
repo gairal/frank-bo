@@ -19,16 +19,16 @@ type Categories []Category
 type OrderedCategories map[int64]Category
 
 // GetAll - Get All Categories
-func (e *Category) GetAll(ctx context.Context) []IEntity {
-	q := datastore.NewQuery("image")
+func (e *Category) GetAll(ctx context.Context) interface{} {
+	q := datastore.NewQuery("category")
 	var entities Categories
 	GetAll(ctx, q, &entities, "order", false)
 
-	return e.sliceToIEntitySlice(entities)
+	return entities
 }
 
 // GetAllByCategory - Get All Skills by catgory
-func (e *Category) GetAllByCategory(ctx context.Context) []IEntity {
+func (e *Category) GetAllByCategory(ctx context.Context) interface{} {
 	return e.GetAll(ctx)
 }
 
@@ -53,28 +53,16 @@ func (e *Category) getMultiOrdered(ctx context.Context, keys []*datastore.Key) O
 
 // Get - Get Education by id
 func (e *Category) Get(ctx context.Context, k int64) {
-	Get(ctx, "image", k, e)
+	Get(ctx, "category", k, e)
 }
 
-// sliceToIEntitySlice - Transforman education slice to IEntity slice
-func (e *Category) sliceToIEntitySlice(es Categories) []IEntity {
-	res := make([]IEntity, len(es))
-
-	for i, v := range es {
-		ent := v
-		res[i] = IEntity(&ent)
-	}
-
-	return res
-}
-
-// orderedCategoriesToIEntitySlice - Transforman education slice to IEntity slice
-func (e *Category) orderedCategoriesToIEntitySlice(oi OrderedCategories) []IEntity {
-	res := make([]IEntity, len(oi))
+// orderedEntitiesToSlice - Transforman education slice to IEntity slice
+func (e *Category) orderedEntitiesToSlice(oi OrderedCategories) Categories {
+	res := make(Categories, len(oi))
 	idx := 0
 	for _, v := range oi {
 		img := v
-		res[idx] = IEntity(&img)
+		res[idx] = Category(img)
 		idx++
 	}
 

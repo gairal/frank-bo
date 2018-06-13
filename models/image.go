@@ -19,16 +19,16 @@ type Images []Image
 type OrderedImages map[int64]Image
 
 // GetAll - Get All Images
-func (e *Image) GetAll(ctx context.Context) []IEntity {
+func (e *Image) GetAll(ctx context.Context) interface{} {
 	q := datastore.NewQuery("image")
 	var entities Images
 	GetAll(ctx, q, &entities, "", false)
 
-	return e.sliceToIEntitySlice(entities)
+	return entities
 }
 
 // GetAllByCategory - Get All Skills by catgory
-func (e *Image) GetAllByCategory(ctx context.Context) []IEntity {
+func (e *Image) GetAllByCategory(ctx context.Context) interface{} {
 	return e.GetAll(ctx)
 }
 
@@ -56,25 +56,13 @@ func (e *Image) Get(ctx context.Context, k int64) {
 	Get(ctx, "image", k, e)
 }
 
-// sliceToIEntitySlice - Transforman education slice to IEntity slice
-func (e *Image) sliceToIEntitySlice(es Images) []IEntity {
-	res := make([]IEntity, len(es))
-
-	for i, v := range es {
-		ent := v
-		res[i] = IEntity(&ent)
-	}
-
-	return res
-}
-
-// orderedImagesToIEntitySlice - Transforman education slice to IEntity slice
-func (e *Image) orderedImagesToIEntitySlice(oi OrderedImages) []IEntity {
-	res := make([]IEntity, len(oi))
+// orderedEntitiesToSlice - Transforman education slice to IEntity slice
+func (e *Image) orderedEntitiesToSlice(oi OrderedImages) Images {
+	res := make(Images, len(oi))
 	idx := 0
 	for _, v := range oi {
 		img := v
-		res[idx] = IEntity(&img)
+		res[idx] = Image(img)
 		idx++
 	}
 

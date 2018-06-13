@@ -25,7 +25,7 @@ type Education struct {
 type Educations []Education
 
 // GetAll - Get All Educations
-func (e *Education) GetAll(ctx context.Context) []IEntity {
+func (e *Education) GetAll(ctx context.Context) interface{} {
 	q := datastore.NewQuery("education")
 
 	// Get All educations
@@ -34,11 +34,11 @@ func (e *Education) GetAll(ctx context.Context) []IEntity {
 
 	e.GetImages(ctx, entities)
 
-	return e.sliceToIEntitySlice(entities)
+	return entities
 }
 
 // GetAllByCategory - Get All Skills by catgory
-func (e *Education) GetAllByCategory(ctx context.Context) []IEntity {
+func (e *Education) GetAllByCategory(ctx context.Context) interface{} {
 	return e.GetAll(ctx)
 }
 
@@ -65,16 +65,4 @@ func (e *Education) GetImages(ctx context.Context, entities Educations) {
 	for i := 0; i < len(entities); i++ {
 		entities[i].Image = orderedImgs[entities[i].ImageKey.IntID()]
 	}
-}
-
-// sliceToIEntitySlice - Transforman education slice to IEntity slice
-func (e *Education) sliceToIEntitySlice(es Educations) []IEntity {
-	res := make([]IEntity, len(es))
-
-	for i, v := range es {
-		ent := v
-		res[i] = IEntity(&ent)
-	}
-
-	return res
 }

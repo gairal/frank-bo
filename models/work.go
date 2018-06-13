@@ -27,7 +27,7 @@ type Work struct {
 type Works []Work
 
 // GetAll - Get All Works
-func (e *Work) GetAll(ctx context.Context) []IEntity {
+func (e *Work) GetAll(ctx context.Context) interface{} {
 	q := datastore.NewQuery("work")
 
 	// Get All Works
@@ -36,11 +36,11 @@ func (e *Work) GetAll(ctx context.Context) []IEntity {
 
 	e.GetImages(ctx, entities)
 
-	return e.sliceToIEntitySlice(entities)
+	return entities
 }
 
 // GetAllByCategory - Get All Skills by catgory
-func (e *Work) GetAllByCategory(ctx context.Context) []IEntity {
+func (e *Work) GetAllByCategory(ctx context.Context) interface{} {
 	return e.GetAll(ctx)
 }
 
@@ -67,16 +67,4 @@ func (e *Work) GetImages(ctx context.Context, entities Works) {
 	for i := 0; i < len(entities); i++ {
 		entities[i].Image = orderedImgs[entities[i].ImageKey.IntID()]
 	}
-}
-
-// sliceToIEntitySlice - Transforman work slice to IEntity slice
-func (e *Work) sliceToIEntitySlice(es Works) []IEntity {
-	res := make([]IEntity, len(es))
-
-	for i, v := range es {
-		ent := v
-		res[i] = IEntity(&ent)
-	}
-
-	return res
 }

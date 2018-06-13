@@ -18,16 +18,16 @@ type Travel struct {
 type Travels []Travel
 
 // GetAll - Get All Travels
-func (e *Travel) GetAll(ctx context.Context) []IEntity {
+func (e *Travel) GetAll(ctx context.Context) interface{} {
 	q := datastore.NewQuery("travel")
 	var entities Travels
 	GetAll(ctx, q, &entities, "order", false)
 
-	return e.sliceToIEntitySlice(entities)
+	return entities
 }
 
 // GetAllByCategory - Get All Skills by catgory
-func (e *Travel) GetAllByCategory(ctx context.Context) []IEntity {
+func (e *Travel) GetAllByCategory(ctx context.Context) interface{} {
 	return e.GetAll(ctx)
 }
 

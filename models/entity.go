@@ -9,9 +9,9 @@ import (
 
 // IEntity - entity interface
 type IEntity interface {
-	GetAll(context.Context) []IEntity
+	GetAll(context.Context) interface{}
 	Get(context.Context, int64)
-	GetAllByCategory(context.Context) []IEntity
+	GetAllByCategory(context.Context) interface{}
 }
 
 // Keys - array of datastore keys
