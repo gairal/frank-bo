@@ -14,7 +14,7 @@ type Education struct {
 	YearOut          time.Time      `json:"year_out" datastore:"year_out"`
 	Diploma          string         `json:"diploma" datastore:"diploma"`
 	Place            string         `json:"place" datastore:"place"`
-	ImageKey         *datastore.Key `json:"imgKey" datastore:"image"`
+	ImageKey         *datastore.Key `json:"-" datastore:"image"`
 	Image            Image          `json:"image"`
 	Name             string         `json:"name" datastore:"name"`
 	Website          string         `json:"website" datastore:"website"`

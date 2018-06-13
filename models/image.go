@@ -13,7 +13,7 @@ type Image struct {
 }
 
 // Images - Array of Image
-type Images []*Image
+type Images []Image
 
 // OrderedImages - Ordered map of Image
 type OrderedImages map[int64]Image
@@ -24,12 +24,7 @@ func (e *Image) GetAll(ctx context.Context) []IEntity {
 	var entities Images
 	GetAll(ctx, q, &entities, "", false)
 
-	res := make([]IEntity, len(entities))
-	for i, v := range entities {
-		res[i] = IEntity(v)
-	}
-
-	return res
+	return e.sliceToIEntitySlice(entities)
 }
 
 // GetAllByCategory - Get All Skills by catgory
@@ -39,7 +34,7 @@ func (e *Image) GetAllByCategory(ctx context.Context) []IEntity {
 
 // getMulti - Get All Images In a map whick keys are img keys
 func (e *Image) getMulti(ctx context.Context, keys []*datastore.Key) Images {
-	var entities = make([]*Image, len(keys))
+	var entities = make([]Image, len(keys))
 	GetMulti(ctx, keys, entities)
 	return entities
 }
@@ -50,7 +45,7 @@ func (e *Image) getMultiOrdered(ctx context.Context, keys []*datastore.Key) Orde
 
 	orderedImgs := make(OrderedImages)
 	for i := 0; i < len(keys); i++ {
-		orderedImgs[keys[i].IntID()] = *imgs[i]
+		orderedImgs[keys[i].IntID()] = imgs[i]
 	}
 
 	return orderedImgs
@@ -59,6 +54,18 @@ func (e *Image) getMultiOrdered(ctx context.Context, keys []*datastore.Key) Orde
 // Get - Get Education by id
 func (e *Image) Get(ctx context.Context, k int64) {
 	Get(ctx, "image", k, e)
+}
+
+// sliceToIEntitySlice - Transforman education slice to IEntity slice
+func (e *Image) sliceToIEntitySlice(es Images) []IEntity {
+	res := make([]IEntity, len(es))
+
+	for i, v := range es {
+		ent := v
+		res[i] = IEntity(&ent)
+	}
+
+	return res
 }
 
 // orderedImagesToIEntitySlice - Transforman education slice to IEntity slice

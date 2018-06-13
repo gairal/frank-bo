@@ -34,9 +34,26 @@ func (r *Router) getRoutes() {
 	images := &ImagesRoute{&Route{r, entity}}
 	r.addRoute(images.getRoutes())
 
+	entity = &models.Category{}
+	categories := &CategoriesRoute{&Route{r, entity}}
+	r.addRoute(categories.getRoutes())
+
 	entity = &models.Education{}
 	edus := &EducationsRoute{&Route{r, entity}}
 	r.addRoute(edus.getRoutes())
+
+	entity = &models.Work{}
+	works := &WorksRoute{&Route{r, entity}}
+	r.addRoute(works.getRoutes())
+
+	// r.addRoute(RouteStructs{
+	// 	RouteStruct{
+	// 		"initDb",
+	// 		"POST",
+	// 		"/init",
+	// 		r.init,
+	// 	},
+	// })
 }
 
 // RegisterHandlers - instanciate the router
@@ -70,6 +87,63 @@ func (r *Router) getKey(req *http.Request) int64 {
 	key, _ := strconv.ParseInt(keyStr, 10, 64)
 
 	return key
+}
+
+// init - Add one test entity
+func (r *Router) init(w http.ResponseWriter, req *http.Request) {
+	// 	ctx := appengine.NewContext(r)
+
+	// 	k1 := datastore.NewKey(ctx, "image", "", 0, nil)
+	// 	i1 := models.Image{
+	// 		Name: "ekino",
+	// 	}
+
+	// 	ki1, err := datastore.Put(ctx, k1, &i1)
+	// 	if err != nil {
+	// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 		return
+	// 	}
+
+	// 	k2 := datastore.NewKey(ctx, "image", "", 0, nil)
+	// 	i2 := models.Image{
+	// 		Name: "backelite",
+	// 	}
+
+	// 	ki2, err := datastore.Put(ctx, k2, &i2)
+	// 	if err != nil {
+	// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 		return
+	// 	}
+
+	// 	e1 := models.Education{
+	// 		ShortDescription: "Foo",
+	// 		YearIn:           time.Now(),
+	// 		YearOut:          time.Now(),
+	// 		Diploma:          "osef",
+	// 		Place:            "toto",
+	// 		Name:             "toto",
+	// 		Website:          "tata",
+	// 		ImageKey:         ki1,
+	// 	}
+	// 	e2 := models.Education{
+	// 		ShortDescription: "Bar",
+	// 		YearIn:           time.Now(),
+	// 		YearOut:          time.Now(),
+	// 		Diploma:          "osef",
+	// 		Place:            "tata",
+	// 		Name:             "toto",
+	// 		Website:          "tata",
+	// 		ImageKey:         ki2,
+	// 	}
+
+	// 	if _, err := datastore.Put(ctx, datastore.NewIncompleteKey(ctx, "education", nil), &e1); err != nil {
+	// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 		return
+	// 	}
+	// 	if _, err := datastore.Put(ctx, datastore.NewIncompleteKey(ctx, "education", nil), &e2); err != nil {
+	// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 		return
+	// 	}
 }
 
 // return RouteStructs{
