@@ -26,6 +26,11 @@ func (e *Interest) GetAll(ctx context.Context) []IEntity {
 	return e.sliceToIEntitySlice(entities)
 }
 
+// GetAllByCategory - Get All Skills by catgory
+func (e *Interest) GetAllByCategory(ctx context.Context) []IEntity {
+	return e.GetAll(ctx)
+}
+
 // sliceToIEntitySlice - Transforman education slice to IEntity slice
 func (e *Interest) sliceToIEntitySlice(es Interests) []IEntity {
 	res := make([]IEntity, len(es))

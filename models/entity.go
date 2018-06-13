@@ -11,6 +11,7 @@ import (
 type IEntity interface {
 	GetAll(context.Context) []IEntity
 	Get(context.Context, int64)
+	GetAllByCategory(context.Context) []IEntity
 }
 
 // Keys - array of datastore keys
