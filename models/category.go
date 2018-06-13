@@ -8,8 +8,9 @@ import (
 
 // Category - Catgory Structure
 type Category struct {
-	Name  string `json:"name" datastore:"name"`
-	Order int    `json:"order" datastore:"order"`
+	Key   *datastore.Key `json:"-"`
+	Name  string         `json:"name" datastore:"name"`
+	Order int            `json:"order" datastore:"order"`
 }
 
 // Categories - Array of Category
@@ -18,13 +19,22 @@ type Categories []Category
 // OrderedCategories - Ordered map of Category
 type OrderedCategories map[int64]Category
 
-// GetAll - Get All Categories
-func (e *Category) GetAll(ctx context.Context) interface{} {
+// GetAllCategories - Get All Categories
+func (e *Category) GetAllCategories(ctx context.Context) Categories {
 	q := datastore.NewQuery("category")
 	var entities Categories
-	GetAll(ctx, q, &entities, "order", false)
+	keys := GetAll(ctx, q, &entities, "order", false)
+
+	for i := 0; i < len(entities); i++ {
+		entities[i].Key = keys[i]
+	}
 
 	return entities
+}
+
+// GetAll - Get All Categories
+func (e *Category) GetAll(ctx context.Context) interface{} {
+	return e.GetAllCategories(ctx)
 }
 
 // GetAllByCategory - Get All Skills by catgory

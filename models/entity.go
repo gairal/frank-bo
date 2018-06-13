@@ -70,16 +70,3 @@ func GetOrderedImgs(ctx context.Context, keys map[int64]*datastore.Key) OrderedI
 	img := &Image{}
 	return img.getMultiOrdered(ctx, imgsSlice)
 }
-
-// GetOrderedCats - Get Images in a map for an []IEntity
-func GetOrderedCats(ctx context.Context, keys map[int64]*datastore.Key) OrderedCategories {
-	catsSlice := make(Keys, len(keys))
-	idx := 0
-	for _, v := range keys {
-		catsSlice[idx] = v
-		idx++
-	}
-
-	cat := &Category{}
-	return cat.getMultiOrdered(ctx, catsSlice)
-}

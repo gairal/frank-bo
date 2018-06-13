@@ -31,18 +31,6 @@ func (e *Travel) GetAllByCategory(ctx context.Context) interface{} {
 	return e.GetAll(ctx)
 }
 
-// sliceToIEntitySlice - Transforman education slice to IEntity slice
-func (e *Travel) sliceToIEntitySlice(es Travels) []IEntity {
-	res := make([]IEntity, len(es))
-
-	for i, v := range es {
-		ent := v
-		res[i] = IEntity(&ent)
-	}
-
-	return res
-}
-
 // Get - Get Travel by id
 func (e *Travel) Get(ctx context.Context, k int64) {
 	Get(ctx, "travel", k, e)

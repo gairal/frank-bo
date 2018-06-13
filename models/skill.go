@@ -49,26 +49,11 @@ func (e *Skill) Get(ctx context.Context, k int64) {
 func (e *Skill) GetAllByCategory(ctx context.Context) interface{} {
 	entities := e.GetAllSkills(ctx)
 
-	cats := make(map[int64]*datastore.Key)
-
-	for _, v := range entities {
-		if _, ok := cats[v.CategoryKey.IntID()]; !ok {
-			cats[v.CategoryKey.IntID()] = v.CategoryKey
-		}
-	}
-
-	// log.Fatalf("Failed to get route")
-
-	// Get all Categories
-	orderedCats := GetOrderedCats(ctx, cats)
-	cat := &Category{}
-	return cat.orderedEntitiesToSlice(orderedCats)
-
-	// return e.sliceToIEntitySlice(entities)
+	return e.GetCategories(ctx, entities)
 }
 
 // GetCategories - Get Categories in education slice
-func (e *Skill) GetCategories(ctx context.Context, entities Skills) {
+func (e *Skill) GetCategories(ctx context.Context, entities Skills) SkillCategories {
 	// Get a map of all img keys in my educations
 	cats := make(map[int64]*datastore.Key)
 
@@ -78,11 +63,30 @@ func (e *Skill) GetCategories(ctx context.Context, entities Skills) {
 		}
 	}
 
-	// Get all Categories
-	// orderedCats := GetOrderedCats(ctx, cats)
+	// // Get all Categories
+	c := &Category{}
+	orderedCats := c.GetAllCategories(ctx)
 
-	// Set Category to each edu
-	// for i := 0; i < len(entities); i++ {
-	// 	entities[i].Category = orderedCats[entities[i].CategoryKey.IntID()]
-	// }
+	// Create skills grouped by categories
+	entitiesMap := make(map[int64]Skills)
+	for i := 0; i < len(entities); i++ {
+		id := entities[i].CategoryKey.IntID()
+		if _, ok := entitiesMap[id]; !ok {
+			var skills Skills
+			entitiesMap[id] = skills
+		}
+
+		entitiesMap[id] = append(entitiesMap[id], entities[i])
+	}
+
+	var entityCategories SkillCategories
+	for i := 0; i < len(orderedCats); i++ {
+		cat := orderedCats[i]
+		key := cat.Key.IntID()
+		if val, ok := entitiesMap[key]; ok {
+			entityCategories = append(entityCategories, SkillCategory{cat, val})
+		}
+	}
+
+	return entityCategories
 }
