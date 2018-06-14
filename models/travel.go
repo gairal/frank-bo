@@ -1,36 +1,37 @@
 package models
 
 import (
-	"cloud.google.com/go/datastore"
-)
+	"context"
 
-// Coordinates - Coordinates Structure
-type Coordinates struct {
-	Latitude  float32 `json:"latitude" datastore:"latitude"`
-	Longitude float32 `json:"longitude" datastore:"longitude"`
-}
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/datastore"
+)
 
 // Travel - Travel Structure
 type Travel struct {
-	Entity      *Entity      `json:"-"`
-	Coordinates *Coordinates `json:"Coordinates" datastore:"coordinates"`
-	Order       int          `json:"order" datastore:"order"`
-	Place       string       `json:"place" datastore:"place"`
+	Coordinates appengine.GeoPoint `json:"coordinates" datastore:"coordinates"`
+	Order       int                `json:"order" datastore:"order"`
+	Place       string             `json:"place" datastore:"place"`
 }
 
 // Travels - Array of Travel
 type Travels []Travel
 
 // GetAll - Get All Travels
-func (e *Travel) GetAll() Travels {
+func (e *Travel) GetAll(ctx context.Context) interface{} {
 	q := datastore.NewQuery("travel")
 	var entities Travels
-	e.Entity.getAll(q, &entities, "order", false)
+	GetAll(ctx, q, &entities, "order", false)
 
 	return entities
 }
 
+// GetAllByCategory - Get All Skills by category
+func (e *Travel) GetAllByCategory(ctx context.Context) interface{} {
+	return e.GetAll(ctx)
+}
+
 // Get - Get Travel by id
-func (e *Travel) Get(k int64) {
-	e.Entity.get("travel", k, e)
+func (e *Travel) Get(ctx context.Context, k int64) {
+	Get(ctx, "travel", k, e)
 }

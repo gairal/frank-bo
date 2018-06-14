@@ -1,14 +1,15 @@
 package models
 
 import (
+	"context"
 	"time"
 
-	"cloud.google.com/go/datastore"
+	"google.golang.org/appengine/datastore"
 )
 
 // Work - Work Structure
 type Work struct {
-	Entity          *Entity        `json:"-"`
+	ID              int64          `json:"id" datastore:"ID"`
 	Accomplishments string         `json:"accomplishments" datastore:"accomplishments"`
 	DateIn          time.Time      `json:"date_in" datastore:"date_in"`
 	DateOut         time.Time      `json:"date_out" datastore:"date_out"`
@@ -25,23 +26,45 @@ type Work struct {
 // Works - Array of Work
 type Works []Work
 
-// GetAll - Get All works
-func (e *Work) GetAll() Works {
+// GetAll - Get All Works
+func (e *Work) GetAll(ctx context.Context) interface{} {
 	q := datastore.NewQuery("work")
+
+	// Get All Works
 	var entities Works
-	e.Entity.getAll(q, &entities, "date_in", true)
+	GetAll(ctx, q, &entities, "date_in", true)
 
-	img := &Image{Entity: e.Entity}
-	imgs := img.getAllOrdered()
-
-	for i := 0; i < len(entities); i++ {
-		entities[i].Image = imgs[entities[i].ImageKey.ID]
-	}
+	e.GetImages(ctx, entities)
 
 	return entities
 }
 
-// Get - Get Work by id
-func (e *Work) Get(k int64) {
-	e.Entity.get("work", k, e)
+// GetAllByCategory - Get All Skills by category
+func (e *Work) GetAllByCategory(ctx context.Context) interface{} {
+	return e.GetAll(ctx)
+}
+
+// Get - Get work by id
+func (e *Work) Get(ctx context.Context, k int64) {
+	Get(ctx, "work", k, e)
+}
+
+// GetImages - Get Images in work slice
+func (e *Work) GetImages(ctx context.Context, entities Works) {
+	// Get a map of all img keys in my Works
+	imgs := make(map[int64]*datastore.Key)
+
+	for _, v := range entities {
+		if _, ok := imgs[v.ImageKey.IntID()]; !ok {
+			imgs[v.ImageKey.IntID()] = v.ImageKey
+		}
+	}
+
+	// Get all Images
+	orderedImgs := GetOrderedImgs(ctx, imgs)
+
+	// Set Image to each work
+	for i := 0; i < len(entities); i++ {
+		entities[i].Image = orderedImgs[entities[i].ImageKey.IntID()]
+	}
 }

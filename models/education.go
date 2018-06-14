@@ -1,14 +1,14 @@
 package models
 
 import (
+	"context"
 	"time"
 
-	"cloud.google.com/go/datastore"
+	"google.golang.org/appengine/datastore"
 )
 
 // Education - Education Structure
 type Education struct {
-	Entity           *Entity        `json:"-"`
 	ShortDescription string         `json:"short_description" datastore:"short_description"`
 	YearIn           time.Time      `json:"year_in" datastore:"year_in"`
 	YearOut          time.Time      `json:"year_out" datastore:"year_out"`
@@ -25,22 +25,44 @@ type Education struct {
 type Educations []Education
 
 // GetAll - Get All Educations
-func (e *Education) GetAll() Educations {
+func (e *Education) GetAll(ctx context.Context) interface{} {
 	q := datastore.NewQuery("education")
+
+	// Get All educations
 	var entities Educations
-	e.Entity.getAll(q, &entities, "year_in", true)
+	GetAll(ctx, q, &entities, "year_in", true)
 
-	img := &Image{Entity: e.Entity}
-	imgs := img.getAllOrdered()
-
-	for i := 0; i < len(entities); i++ {
-		entities[i].Image = imgs[entities[i].ImageKey.ID]
-	}
+	e.GetImages(ctx, entities)
 
 	return entities
 }
 
+// GetAllByCategory - Get All Skills by category
+func (e *Education) GetAllByCategory(ctx context.Context) interface{} {
+	return e.GetAll(ctx)
+}
+
 // Get - Get Education by id
-func (e *Education) Get(k int64) {
-	e.Entity.get("education", k, e)
+func (e *Education) Get(ctx context.Context, k int64) {
+	Get(ctx, "education", k, e)
+}
+
+// GetImages - Get Images in education slice
+func (e *Education) GetImages(ctx context.Context, entities Educations) {
+	// Get a map of all img keys in my educations
+	imgs := make(map[int64]*datastore.Key)
+
+	for _, v := range entities {
+		if _, ok := imgs[v.ImageKey.IntID()]; !ok {
+			imgs[v.ImageKey.IntID()] = v.ImageKey
+		}
+	}
+
+	// Get all Images
+	orderedImgs := GetOrderedImgs(ctx, imgs)
+
+	// Set Image to each edu
+	for i := 0; i < len(entities); i++ {
+		entities[i].Image = orderedImgs[entities[i].ImageKey.IntID()]
+	}
 }

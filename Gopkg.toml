@@ -38,5 +38,5 @@
   version = "1.0.0"
 
 [[constraint]]
-  name = "cloud.google.com/go"
-  version = "0.23.0"
+  name = "github.com/rs/cors"
+  version = "1.4.0"

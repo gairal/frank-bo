@@ -1,12 +1,13 @@
 package models
 
 import (
-	"cloud.google.com/go/datastore"
+	"context"
+
+	"google.golang.org/appengine/datastore"
 )
 
 // Interest - Interest Structure
 type Interest struct {
-	Entity      *Entity        `json:"-"`
 	CategoryKey *datastore.Key `json:"-" datastore:"category"`
 	Description string         `json:"description" datastore:"description"`
 	Order       int            `json:"order" datastore:"order"`
@@ -25,45 +26,67 @@ type InterestCategory struct {
 // InterestCategories - Array of InterestCategory
 type InterestCategories []InterestCategory
 
-// GetAll - Get All Interests
-func (e *Interest) GetAll() Interests {
+// GetAllInterests - Get All Interests
+func (e *Interest) GetAllInterests(ctx context.Context) Interests {
 	q := datastore.NewQuery("interest")
 	var entities Interests
-	e.Entity.getAll(q, &entities, "order", false)
+	GetAll(ctx, q, &entities, "", false)
 
 	return entities
 }
 
-// GetAllByCategory - Get All Interests by category
-func (e *Interest) GetAllByCategory() InterestCategories {
-	entities := e.GetAll()
-	var entityCategories InterestCategories
+// GetAll - Get All Interests
+func (e *Interest) GetAll(ctx context.Context) interface{} {
+	return e.GetAllInterests(ctx)
+}
 
-	cat := &Category{Entity: e.Entity}
-	cats := cat.getAll()
+// Get - Get Interest by id
+func (e *Interest) Get(ctx context.Context, k int64) {
+	Get(ctx, "interest", k, e)
+}
 
-	entitiesMap := make(map[int64]Interests)
+// GetAllByCategory - Get All Skills by category
+func (e *Interest) GetAllByCategory(ctx context.Context) interface{} {
+	entities := e.GetAllInterests(ctx)
 
-	// Create Interests grouped by categories
-	for i := 0; i < len(entities); i++ {
-		if _, ok := entitiesMap[entities[i].CategoryKey.ID]; !ok {
-			var interests Interests
-			entitiesMap[entities[i].CategoryKey.ID] = interests
+	return e.GetCategories(ctx, entities)
+}
+
+// GetCategories - Get Categories in education slice
+func (e *Interest) GetCategories(ctx context.Context, entities Interests) InterestCategories {
+	// Get a map of all img keys in my educations
+	cats := make(map[int64]*datastore.Key)
+
+	for _, v := range entities {
+		if _, ok := cats[v.CategoryKey.IntID()]; !ok {
+			cats[v.CategoryKey.IntID()] = v.CategoryKey
 		}
-
-		entitiesMap[entities[i].CategoryKey.ID] = append(entitiesMap[entities[i].CategoryKey.ID], entities[i])
 	}
 
-	for i := 0; i < len(cats); i++ {
-		if val, ok := entitiesMap[cats[i].Key.ID]; ok {
-			entityCategories = append(entityCategories, InterestCategory{cats[i], val})
+	// // Get all Categories
+	c := &Category{}
+	orderedCats := c.GetAllCategories(ctx)
+
+	// Create Interests grouped by categories
+	entitiesMap := make(map[int64]Interests)
+	for i := 0; i < len(entities); i++ {
+		id := entities[i].CategoryKey.IntID()
+		if _, ok := entitiesMap[id]; !ok {
+			var interests Interests
+			entitiesMap[id] = interests
+		}
+
+		entitiesMap[id] = append(entitiesMap[id], entities[i])
+	}
+
+	var entityCategories InterestCategories
+	for i := 0; i < len(orderedCats); i++ {
+		cat := orderedCats[i]
+		key := cat.Key.IntID()
+		if val, ok := entitiesMap[key]; ok {
+			entityCategories = append(entityCategories, InterestCategory{cat, val})
 		}
 	}
 
 	return entityCategories
-}
-
-// Get - Get Interest by id
-func (e *Interest) Get(k int64) {
-	e.Entity.get("interest", k, e)
 }
