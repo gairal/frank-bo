@@ -6,7 +6,7 @@ import (
 	"google.golang.org/appengine/datastore"
 )
 
-// Category - Catgory Structure
+// Category - category Structure
 type Category struct {
 	Key   *datastore.Key `json:"-"`
 	Name  string         `json:"name" datastore:"name"`
@@ -37,7 +37,7 @@ func (e *Category) GetAll(ctx context.Context) interface{} {
 	return e.GetAllCategories(ctx)
 }
 
-// GetAllByCategory - Get All Skills by catgory
+// GetAllByCategory - Get All Skills by category
 func (e *Category) GetAllByCategory(ctx context.Context) interface{} {
 	return e.GetAll(ctx)
 }

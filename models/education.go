@@ -37,7 +37,7 @@ func (e *Education) GetAll(ctx context.Context) interface{} {
 	return entities
 }
 
-// GetAllByCategory - Get All Skills by catgory
+// GetAllByCategory - Get All Skills by category
 func (e *Education) GetAllByCategory(ctx context.Context) interface{} {
 	return e.GetAll(ctx)
 }

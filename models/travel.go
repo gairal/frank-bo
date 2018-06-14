@@ -26,7 +26,7 @@ func (e *Travel) GetAll(ctx context.Context) interface{} {
 	return entities
 }
 
-// GetAllByCategory - Get All Skills by catgory
+// GetAllByCategory - Get All Skills by category
 func (e *Travel) GetAllByCategory(ctx context.Context) interface{} {
 	return e.GetAll(ctx)
 }

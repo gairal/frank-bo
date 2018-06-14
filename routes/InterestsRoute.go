@@ -13,6 +13,12 @@ func (r *InterestsRoute) getRoutes() RouteStructs {
 			r.index,
 		},
 		RouteStruct{
+			"interestsByCategory",
+			"GET",
+			"/interests/categories",
+			r.byCategory,
+		},
+		RouteStruct{
 			"interestsByKey",
 			"GET",
 			"/interests/{key}",

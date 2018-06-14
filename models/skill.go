@@ -45,7 +45,7 @@ func (e *Skill) Get(ctx context.Context, k int64) {
 	Get(ctx, "skill", k, e)
 }
 
-// GetAllByCategory - Get All Skills by catgory
+// GetAllByCategory - Get All Skills by category
 func (e *Skill) GetAllByCategory(ctx context.Context) interface{} {
 	entities := e.GetAllSkills(ctx)
 

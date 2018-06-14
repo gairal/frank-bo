@@ -42,3 +42,9 @@ func (r *Route) byKey(w http.ResponseWriter, req *http.Request) {
 	r.entity.Get(appengine.NewContext(req), r.router.getKey(req))
 	r.router.serve(w, r.entity)
 }
+
+// byCategory - Get one entity by its key
+func (r *Route) byCategory(w http.ResponseWriter, req *http.Request) {
+	es := r.entity.GetAllByCategory(appengine.NewContext(req))
+	r.router.serve(w, &es)
+}

@@ -8,6 +8,7 @@ import (
 
 	"github.com/gairal/frank-gairal-bo/mocks"
 	"github.com/gairal/frank-gairal-bo/models"
+	"github.com/rs/cors"
 	"google.golang.org/appengine"
 
 	"github.com/gorilla/handlers"
@@ -84,7 +85,13 @@ func RegisterHandlers() {
 			Handler(handler)
 	}
 
-	http.Handle("/", handlers.CombinedLoggingHandler(os.Stderr, router))
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"https://frank.gairal.com", "http://frank.gairal.com", "http://localhost:3000"},
+	})
+
+	handler := c.Handler(router)
+
+	http.Handle("/", handlers.CombinedLoggingHandler(os.Stderr, handler))
 }
 
 // serveGetAll - Send JSON content

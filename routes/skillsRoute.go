@@ -1,11 +1,5 @@
 package routes
 
-import (
-	"net/http"
-
-	"google.golang.org/appengine"
-)
-
 // SkillsRoute Struct
 type SkillsRoute struct{ *Route }
 
@@ -31,10 +25,4 @@ func (r *SkillsRoute) getRoutes() RouteStructs {
 			r.byKey,
 		},
 	}
-}
-
-// byCategory - Get one entity by its key
-func (r *SkillsRoute) byCategory(w http.ResponseWriter, req *http.Request) {
-	es := r.entity.GetAllByCategory(appengine.NewContext(req))
-	r.router.serve(w, &es)
 }
